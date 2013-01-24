@@ -1,0 +1,77 @@
+<!doctype html>
+<html ng-app="app">
+  <header>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.1/angular.js"></script>
+    <script language="javascript" type="text/javascript">
+      angular.module('app', []);
+      
+      //Whatever you put on the controller scope,
+      //will be availalble in the HTML element bound to the controller.
+      function MyController($scope){
+        //$scope.newMessage = "Enter your name";
+        $scope.name = "Enter your name";
+        
+        $scope.messages = ["perfect", "average luck","so-so luck"]; 
+        $scope.casinos = ["MBS", "Las Vegas","RWS"];
+        $scope.luck = 0;
+        $scope.message = "";
+        $scope.casList=[];
+        $scope.luckScoreArr =[];
+        $scope.luckTotal=0;
+        
+        $scope.add = function(){
+          
+          if ($scope.cas === "") {
+            $scope.warningMsg = "Please choose a casino!";
+            return;
+          }
+          
+          $scope.casList.push($scope.cas);
+          $scope.luck = Math.round(Math.random()*10
+            * $scope.name.length/($scope.name.length+1)
+            * $scope.cas.length/($scope.cas.length + Math.random()*5)*100)/100;
+          
+          if($scope.luck <=10 && $scope.luck >7){
+            $scope.message = $scope.messages[0];
+          }else if ($scope.luck <=7 && $scope.luck >3) {
+            $scope.message = $scope.messages[1];
+          }else {
+            $scope.message = $scope.messages[2];
+          }
+          $scope.luckScoreArr.push($scope.luck.toString()
+            .concat("--".concat($scope.message)));
+          
+          $scope.luckTotal = $scope.luckTotal + $scope.luck
+          $scope.luckPercent = (Math.round(
+            $scope.luckTotal/$scope.luckScoreArr.length*100)/100)
+            .toString().concat("%");
+          
+        };
+      }
+    </script>
+  </header>
+  
+  <body ng-controller="MyController">
+    <H2>Luck Calculator:</H2>
+    {{warningMsg}} <br>
+    Overall luck percentage = {{luckPercent}} <br><br>
+    Name:<input type="text" ng-model="name">
+    </br>
+    Seelct a Casino: <select ng-model="cas">
+      <option ng-repeat="casino in casinos" selected>{{casino}}</option>
+    </select>
+    
+    <input type="submit" ng-click="add()" value="Calculate">
+    <br><br>
+    Luck Score (0-10) : {{luck}} ({{message}})
+    
+    <br><br>
+    Luck record: <br>
+    <ul>
+      <li ng-repeat="luck in luckScoreArr">
+        {{luck}}
+      </li>
+    </ul>
+  </body>
+  
+</html>
